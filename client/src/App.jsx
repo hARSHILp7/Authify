@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLock } from '@fortawesome/free-solid-svg-icons'
+
 const messages = [
   "Dream big, act bigger", "Make today count fully", "You are your limit",
   "Stay strong, keep going", "Believe and achieve it", "Small steps, big wins",
@@ -11,22 +14,21 @@ function App() {
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
 
   return (
-    <div className="flex flex-col items-center justify-center gap-10 h-screen bg-darkBackground">
-      {/* <div className="text-[56px] font-bold text-lightBackground blur-[20px]">
-        {randomMessage}
-      </div> */}
+    <div className="flex flex-col items-center justify-center gap-10 h-screen bg-darkBackground font-extralight">
       <div className="relative w-fit">
-        <p className="blur-[22px] select-none text-lightBackground text-[56px] font-bold">
+        <p className="text-lightBackground text-[56px] blur-[22px] select-none">
           {randomMessage}
         </p>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-4xl">
-            🔒
+          <span className="text-3xl">
+            {/* 🔒 */}
+            <FontAwesomeIcon icon={faLock} className="text-accent" />
           </span>
         </div>
       </div>
-      <button className="border-accent border-solid border-[2px] text-[28px] text-accent px-4 py-2 rounded-md transition duration-500 hover:bg-accent hover:text-darkBackground">
-        Login to access the hidden message
+      <button className=
+        "border-accent border-[1px] text-[28px] text-accent px-4 py-2 rounded-lg transition duration-500 hover:scale-110">
+        Unlock with login
       </button>
     </div>
   )

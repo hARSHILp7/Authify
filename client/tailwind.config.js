@@ -7,6 +7,9 @@ export default {
   ],
   theme: { 
     extend: {
+      fontFamily: {
+        Inter: ["Inter", "sans-serif"],
+      },
       colors: {
         darkBackground: "var(--color-darkBackground)",
         lightBackground: "var(--color-lightBackground)",

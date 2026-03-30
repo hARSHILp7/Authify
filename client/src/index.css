@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,4 +10,21 @@
         --color-lightBackground: #FFFFFF;   /* White */
         --color-accent: #F26800;            /* Orange */
     }
+
+    body {
+        font-family: "Inter", sans-serif;
+    }
+
+    * {
+        -ms-overflow-style: none;   /* Internet Explorer & Edge */
+        scrollbar-width: none;      /* Firefox */
+    }
+
+    *::-webkit-scrollbar {
+        display: none;              /* Chrome, Safari, Opera */
+    }
+}
+
+.signup-button, .login-button {
+    @apply w-full py-3 mt-10 text-xl font-normal text-accent border-accent border-[1px] rounded-md transition duration-500 hover:bg-accent hover:text-darkBackground;
 }
