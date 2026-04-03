@@ -1,113 +1,35 @@
+import { useNavigate } from "react-router-dom"
+
 function SignUp() {
+    const navigate = useNavigate();
+
     return (
         <div className="flex items-center justify-center h-screen bg-darkBackground font-extralight">
             <form className="flex-col border-accent border-[1px] rounded-xl p-10 w-1/4">
                 <div className="text-4xl text-lightBackground">Sign Up</div>
                 <div className="text-lightBackground">
-                    Already a member? <a className="text-accent font-medium cursor-pointer">Log in</a>
+                    Already a member? <a onClick={() => navigate('/login')} className="text-accent font-medium cursor-pointer">Log in</a>
                 </div>
 
                 <div className="relative w-full text-lightBackground mt-16">
-                    <input type="text" 
-                     placeholder="" 
-                     autoComplete="off" 
-                     className="peer w-full bg-transparent
-                                border-b-[1px] border-accent
-                                focus:border-b-[1px] focus:outline-none
-                                px-2 py-3 text-lightBackground
-                                transition-colors duration-500"
-                     />
-                    <label 
-                     className="absolute left-2 top-3 text-accent text-base
-                                transition-all duration-500 pointer-events-none
-                                peer-placeholder-shown:top-3
-                                peer-placeholder-shown:text-base
-                                peer-hover:-top-4
-                                peer-hover:text-sm
-                                peer-hover:text-accent
-                                peer-focus:-top-4
-                                peer-focus:text-sm
-                                peer-focus:text-accent
-                                peer-[:not(:placeholder-shown)]:-top-4
-                                peer-[:not(:placeholder-shown)]:text-sm">Name</label>
+                    <label className="input-label">Name</label>
+                    <input type="text" placeholder="" autoComplete="off" className="input-box"/>
                 </div>
 
                 <div className="relative w-full text-lightBackground mt-10">
-                    <input type="text" 
-                     placeholder="" 
-                     autoComplete="off" 
-                     className="peer w-full bg-transparent
-                                border-b-[1px] border-accent
-                                focus:border-b-[1px] focus:outline-none
-                                px-2 py-3 text-lightBackground
-                                transition-colors duration-500"
-                     />
-                    <label 
-                     className="absolute left-2 top-3 text-accent text-base
-                                transition-all duration-500 pointer-events-none
-                                peer-placeholder-shown:top-3
-                                peer-placeholder-shown:text-base
-                                peer-hover:-top-4
-                                peer-hover:text-sm
-                                peer-hover:text-accent
-                                peer-focus:-top-4
-                                peer-focus:text-sm
-                                peer-focus:text-accent
-                                peer-[:not(:placeholder-shown)]:-top-4
-                                peer-[:not(:placeholder-shown)]:text-sm">Username</label>
+                    <label className="input-label">Username</label>
+                    <input type="text" placeholder="" autoComplete="off" className="input-box"/>
                 </div>
                     
                 <div className="relative w-full text-lightBackground mt-10">
-                    <input type="password" 
-                     placeholder="" 
-                     autoComplete="off" 
-                     className="peer w-full bg-transparent
-                                border-b-[1px] border-accent
-                                focus:border-b-[1px] focus:outline-none
-                                px-2 py-3 text-lightBackground
-                                transition-colors duration-500"
-                     />
-                    <label 
-                     className="absolute left-2 top-3 text-accent text-base
-                                transition-all duration-500 pointer-events-none
-                                peer-placeholder-shown:top-3
-                                peer-placeholder-shown:text-base
-                                peer-hover:-top-4
-                                peer-hover:text-sm
-                                peer-hover:text-accent
-                                peer-focus:-top-4
-                                peer-focus:text-sm
-                                peer-focus:text-accent
-                                peer-[:not(:placeholder-shown)]:-top-4
-                                peer-[:not(:placeholder-shown)]:text-sm">Password</label>
+                    <label className="input-label">Password</label>
+                    <input type="password" placeholder="" autoComplete="off" className="input-box"/>
                 </div>
 
-                <div className="relative w-full text-lightBackground mt-10">
-                    <input type="password" 
-                     placeholder="" 
-                     autoComplete="off" 
-                     className="peer w-full bg-transparent
-                                border-b-[1px] border-accent
-                                focus:border-b-[1px] focus:outline-none
-                                px-2 py-3 text-lightBackground
-                                transition-colors duration-500"
-                     />
-                    <label 
-                     className="absolute left-2 top-3 text-accent text-base
-                                transition-all duration-500 pointer-events-none
-                                peer-placeholder-shown:top-3
-                                peer-placeholder-shown:text-base
-                                peer-hover:-top-4
-                                peer-hover:text-sm
-                                peer-hover:text-accent
-                                peer-focus:-top-4
-                                peer-focus:text-sm
-                                peer-focus:text-accent
-                                peer-[:not(:placeholder-shown)]:-top-4
-                                peer-[:not(:placeholder-shown)]:text-sm">Confirm Password</label>
+                <div className="flex gap-4 mt-2">
+                    <button className="login-button">Log in</button>
+                    <button onClick={() => navigate('/')} className="back-button">Back</button>
                 </div>
-
-                <button className="signup-button">Sign up</button>
 
             </form>
         </div>

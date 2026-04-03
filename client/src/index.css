@@ -25,6 +25,21 @@
     }
 }
 
+.input-box {
+    @apply w-full bg-transparent border-[1px] border-accent rounded-md focus:border-b-[1px] focus:outline-none
+    px-2 py-3 text-lightBackground transition-colors duration-500;
+}
+
+.input-label {
+    @apply text-lightBackground font-extralight text-sm transition-all duration-500 pointer-events-none;
+}
+
 .signup-button, .login-button {
-    @apply w-full py-3 mt-10 text-xl font-normal text-accent border-accent border-[1px] rounded-md transition duration-500 hover:bg-accent hover:text-darkBackground;
+    @apply w-3/4 py-3 mt-10 text-xl font-normal text-accent border-accent border-[1px] rounded-md
+    transition duration-500 hover:bg-accent hover:text-darkBackground;
+}
+
+.back-button {
+    @apply w-1/4 py-3 mt-10 text-xl font-normal text-lightBackground rounded-md transition duration-500
+    hover:bg-lightBackground hover:text-darkBackground;
 }
