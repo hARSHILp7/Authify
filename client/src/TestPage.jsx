@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from './context/AuthContext.jsx'
 
@@ -5,6 +6,7 @@ function TestPage() {
   const { user, token, login, logout } = useAuth()
   const [inputName, setInputName] = useState('')
   const [inputEmail, setInputEmail] = useState('')
+  const navigate = useNavigate()
 
   const handleFakeLogin = () => {
     const fakeUser = {
@@ -15,17 +17,19 @@ function TestPage() {
     login(fakeUser, fakeToken)
   }
 
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white p-10 flex flex-col gap-6">
 
       <h1 className="text-3xl font-bold text-orange-500">🧪 Test Page</h1>
-      <p className="text-gray-400">Testing Issue #1 — AuthContext</p>
+      <p className="text-gray-400">Testing Issue #2 — ProtectedRoute</p>
 
       {/* ── Auth State ── */}
       <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-3">
-        <h2 className="text-orange-400 font-semibold text-lg">
-          Current Auth State
-        </h2>
+        <h2 className="text-orange-400 font-semibold text-lg">Current Auth State</h2>
         <p>
           <span className="text-gray-400">User: </span>
           <span className={user ? 'text-green-400' : 'text-red-400'}>
@@ -46,12 +50,10 @@ function TestPage() {
         </p>
       </div>
 
-      {/* ── Fake Login Form ── */}
+      {/* ── Fake Login ── */}
       {!user && (
         <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-4">
-          <h2 className="text-orange-400 font-semibold text-lg">
-            Simulate Login
-          </h2>
+          <h2 className="text-orange-400 font-semibold text-lg">Simulate Login</h2>
           <input
             type="text"
             placeholder="Enter name"
@@ -75,55 +77,42 @@ function TestPage() {
         </div>
       )}
 
-      {/* ── Logged In Panel ── */}
+      {/* ── Logged In ── */}
       {user && (
         <div className="border border-green-700 rounded-xl p-6 flex flex-col gap-3">
-          <h2 className="text-green-400 font-semibold text-lg">
-            ✅ Logged In Successfully
-          </h2>
-          <p>
-            <span className="text-gray-400">Name: </span>
-            <span className="text-white">{user.name}</span>
-          </p>
-          <p>
-            <span className="text-gray-400">Email: </span>
-            <span className="text-white">{user.email}</span>
-          </p>
-          <p>
-            <span className="text-gray-400">Token: </span>
-            <span className="text-yellow-400 break-all">{token}</span>
-          </p>
+          <h2 className="text-green-400 font-semibold text-lg">✅ Logged In</h2>
+          <p><span className="text-gray-400">Name: </span>{user.name}</p>
+          <p><span className="text-gray-400">Email: </span>{user.email}</p>
           <button
-            onClick={logout}
-            className="mt-2 py-3 rounded-lg border border-red-600 hover:bg-red-600 transition-colors duration-300"
+            onClick={handleLogout}
+            className="py-3 rounded-lg border border-red-600 hover:bg-red-600 transition-colors duration-300"
           >
             Simulate Logout
           </button>
         </div>
       )}
 
-      {/* ── localStorage Inspector ── */}
-      <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-3">
+      {/* ── ProtectedRoute Test Buttons ── */}
+      <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-4">
         <h2 className="text-orange-400 font-semibold text-lg">
-          localStorage Inspector
+          ProtectedRoute Tests
         </h2>
-        <p>
-          <span className="text-gray-400">authToken: </span>
-          <span className="text-yellow-400">
-            {localStorage.getItem('authToken') || 'empty'}
-          </span>
+        <p className="text-gray-400 text-sm">
+          Try visiting /dashboard while logged in and logged out.
         </p>
-        <p>
-          <span className="text-gray-400">authUser: </span>
-          <span className="text-yellow-400">
-            {localStorage.getItem('authUser') || 'empty'}
-          </span>
-        </p>
+
         <button
-          onClick={() => window.location.reload()}
-          className="mt-2 py-2 px-4 w-fit rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors text-sm"
+          onClick={() => navigate('/dashboard')}
+          className="py-3 rounded-lg border border-orange-600 hover:bg-orange-600 transition-colors duration-300"
         >
-          🔄 Reload to Test Persistence
+          Go to dashboard
+        </button>
+
+        <button
+          onClick={() => navigate('/login')}
+          className="py-3 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors duration-300"
+        >
+          Go to /login
         </button>
       </div>
 
