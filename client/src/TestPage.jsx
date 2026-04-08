@@ -39,17 +39,17 @@ function TestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-darkBackground text-white p-10 flex flex-col gap-6">
+    <div className="min-h-screen bg-[#1a1a1a] text-white p-10 flex flex-col gap-6">
 
       <h1 className="text-3xl font-bold text-orange-500">🧪 Test Page</h1>
-      <p className="text-gray-400">Testing Issue #3 — WelcomeMessage</p>
+      <p className="text-gray-400">Testing Issue #4 — DashboardPage</p>
 
-      {/* ── Welcome Message ── */}
+      {/* Welcome Message */}
       {showWelcome && user && (
         <WelcomeMessage isNewUser={isNewUser} />
       )}
 
-      {/* ── Auth State ── */}
+      {/* Auth State */}
       <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-3">
         <h2 className="text-orange-400 font-semibold text-lg">Current Auth State</h2>
         <p>
@@ -72,10 +72,12 @@ function TestPage() {
         </p>
       </div>
 
-      {/* ── Fake Login/Signup Form ── */}
+      {/* Fake Login/Signup */}
       {!user && (
         <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-4">
-          <h2 className="text-orange-400 font-semibold text-lg">Simulate Login / Signup</h2>
+          <h2 className="text-orange-400 font-semibold text-lg">
+            Simulate Login / Signup
+          </h2>
           <input
             type="text"
             placeholder="Enter name"
@@ -90,8 +92,6 @@ function TestPage() {
             onChange={(e) => setInputEmail(e.target.value)}
             className="bg-transparent border-b border-gray-600 focus:border-orange-500 focus:outline-none py-2 text-white placeholder-gray-500 transition-colors"
           />
-
-          {/* Two buttons to test both messages */}
           <div className="flex gap-4">
             <button
               onClick={handleFakeLogin}
@@ -109,7 +109,7 @@ function TestPage() {
         </div>
       )}
 
-      {/* ── Logged In ── */}
+      {/* Logged In */}
       {user && (
         <div className="border border-green-700 rounded-xl p-6 flex flex-col gap-3">
           <h2 className="text-green-400 font-semibold text-lg">✅ Logged In</h2>
@@ -121,6 +121,15 @@ function TestPage() {
               {isNewUser ? 'New User 🎉' : 'Returning User 👋'}
             </span>
           </p>
+
+          {/* Navigate to Dashboard */}
+          <button
+            onClick={() => navigate('/dashboard', { state: { isNewUser } })}
+            className="py-3 rounded-lg border border-orange-600 hover:bg-orange-600 transition-colors duration-300"
+          >
+            Go to Dashboard
+          </button>
+
           <button
             onClick={handleLogout}
             className="py-3 rounded-lg border border-red-600 hover:bg-red-600 transition-colors duration-300"
@@ -129,21 +138,6 @@ function TestPage() {
           </button>
         </div>
       )}
-
-      {/* ── WelcomeMessage Tests ── */}
-      <div className="border border-gray-700 rounded-xl p-6 flex flex-col gap-4">
-        <h2 className="text-orange-400 font-semibold text-lg">WelcomeMessage Tests</h2>
-        <p className="text-gray-400 text-sm">
-          Login or Sign Up above to see the welcome message appear.
-        </p>
-        <div className="flex flex-col gap-2 text-sm text-gray-400">
-          <p>✅ Login  → shows "Welcome back, {"{name}"}! 👋"</p>
-          <p>✅ Signup → shows "Welcome to Authify, {"{name}"}! 🎉"</p>
-          <p>✅ Fades in smoothly on appear</p>
-          <p>✅ Auto dismisses after 5 seconds</p>
-          <p>✅ Can be manually dismissed</p>
-        </div>
-      </div>
 
     </div>
   )
