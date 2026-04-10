@@ -1,12 +1,16 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import connectDB from './config/db.js'
 
 // Load environment variables
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+// connect to MongoDB
+connectDB()
 
 // Middleware
 app.use(cors({
