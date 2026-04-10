@@ -90,9 +90,9 @@ function SignUpPage() {
 
                 {/* Heading */}
                 <div>
-                    <h1 className="text-lightBackground text-4xl font-light">Log In</h1>
+                    <h1 className="text-lightBackground text-4xl font-light">Sign Up</h1>
                     <p className="text-lightBackground mt-1">
-                        Don't have an account?{" "}
+                        Already a member?{" "}
                         <Link to="/login" className="text-accent hover:text-accent transition-colors">
                             Log in
                         </Link>
@@ -206,7 +206,7 @@ function SignUpPage() {
                     disabled={loading}
                     className="w-full py-4 rounded-xl border border-accent text-lightBackground font-medium text-lg hover:bg-accent transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                    {loading ? 'Logging in...' : 'Log In'}
+                    {loading ? 'Signing up...' : 'Sign Up'}
                 </button>
             </div>
         </div>
