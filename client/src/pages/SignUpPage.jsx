@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from "../context/AuthContext"
+import { signupUser } from "../services/authService"
 
 function SignUpPage() {
     const [name,            setName]            = useState('')
@@ -11,7 +13,11 @@ function SignUpPage() {
     const [showPassword,    setShowPassword]    = useState(false)
     const [showConfirm,     setShowConfirm]     = useState(false)
     const [errors,          setErrors]          = useState({})
+    const [apiError,        setApiError]        = useState('')
     const [loading,         setLoading]         = useState(false)
+
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
     // Validation function
     const validate = () => {
@@ -34,7 +40,14 @@ function SignUpPage() {
         // Password validation
         if (!password) {
             newErrors.password = "Password is required"
-        } else if (password !== confirmPassword) {
+        } else if (password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters"
+        }
+
+        // Confirm password validation
+        if (!confirmPassword) {
+            newErrors.confirmPassword = "Please confirm your password"
+        } else if (confirmPassword !== password) {
             newErrors.confirmPassword = "Passwords do not match"
         }
 
@@ -44,221 +57,157 @@ function SignUpPage() {
     // Submit
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        // Run validation first
         const validationErrors = validate()
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             return
         }
         setErrors({})
+        setApiError('')
         setLoading(true)
 
-        // API call will be added in issue #7
-        console.log('Signup submitted:', { name, email, password })
-        setLoading(false)
+        try {
+            // Call the backend API
+            const response = await signupUser({ name, email, password })
+            // Save user and token to AuthContext and localStorage
+            login(response.data.user, response.data.token)
+            //Redirect to dashboard as new user
+            navigate('/dashboard', { state: { isNewUser: true } })
+        } catch (error) {
+            setApiError(
+                error.response?.data?.message || 'Sign up failed. Please try again.'
+            )
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-darkBackground">
-            <div className="border border-orange-600 rounded-2xl p-10 w-full max-w-lg flex flex-col gap-8">
+            <div className="border border-accent rounded-2xl p-10 w-full max-w-lg flex flex-col gap-8">
 
                 {/* Heading */}
                 <div>
-                <h1 className="text-white text-4xl font-light">Sign Up</h1>
-                <p className="text-lightBackground mt-1">
-                    Already a member?{" "}
-                    <Link to="/login" className="text-accent hover:text-accent transition-colors">
-                    Log in
-                    </Link>
-                </p>
+                    <h1 className="text-lightBackground text-4xl font-light">Log In</h1>
+                    <p className="text-lightBackground mt-1">
+                        Don't have an account?{" "}
+                        <Link to="/login" className="text-accent hover:text-accent transition-colors">
+                            Log in
+                        </Link>
+                    </p>
                 </div>
 
-                {/* Name */}
-                <div className="flex flex-col gap-1">
-                <div className={`
-                    relative flex items-center gap-3 py-2
-                    border-b transition-colors duration-300
-                    ${errors.name
-                    ? 'border-red-500'
-                    : 'border-lightBackground focus-within:border-accent'
-                    }
-                `}>
-                    <FontAwesomeIcon icon={faUser} className="text-lightBackground" />
-                    <input
-                    type="text"
-                    placeholder=" "
-                    value={name}
-                    onChange={(e) => {
-                        setName(e.target.value)
-                        if (errors.name) setErrors({ ...errors, name: '' })
-                    }}
-                    className="peer bg-transparent focus:outline-none w-full text-white placeholder-transparent"
-                    />
-                    <label className="
-                    absolute left-8 top-2
-                    text-lightBackground text-base
-                    transition-all duration-300 pointer-events-none
-                    peer-placeholder-shown:top-2
-                    peer-placeholder-shown:text-base
-                    peer-focus:-top-4
-                    peer-focus:text-xs
-                    peer-focus:text-accent
-                    peer-[:not(:placeholder-shown)]:-top-4
-                    peer-[:not(:placeholder-shown)]:text-xs
-                    ">
-                    Full Name
-                    </label>
-                </div>
-                {errors.name && (
-                    <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                {/* API Error */}
+                {apiError && (
+                    <div className="bg-red-500/10 border border-red-500 rounded-lg px-4 py-3">
+                        <p className="text-red-500 text-sm">{apiError}</p>
+                    </div>
                 )}
-                </div>
 
                 {/* Email */}
                 <div className="flex flex-col gap-1">
-                <div className={`
-                    relative flex items-center gap-3 py-2
-                    border-b transition-colors duration-300
-                    ${errors.email
-                    ? 'border-red-500'
-                    : 'border-lightBackground focus-within:border-accent'
-                    }
-                `}>
-                    <FontAwesomeIcon icon={faEnvelope} className="text-lightBackground" />
-                    <input
-                    type="email"
-                    placeholder=" "
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value)
-                        if (errors.email) setErrors({ ...errors, email: '' })
-                    }}
-                    className="peer bg-transparent focus:outline-none w-full text-white placeholder-transparent"
-                    />
-                    <label className="
-                    absolute left-8 top-2
-                    text-lightBackground text-base
-                    transition-all duration-300 pointer-events-none
-                    peer-placeholder-shown:top-2
-                    peer-placeholder-shown:text-base
-                    peer-focus:-top-4
-                    peer-focus:text-xs
-                    peer-focus:text-accent
-                    peer-[:not(:placeholder-shown)]:-top-4
-                    peer-[:not(:placeholder-shown)]:text-xs
-                    ">
-                    Email Address
-                    </label>
-                </div>
-                {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
+                    <div className={`
+                        group relative flex items-center gap-3 py-2
+                        border-b transition-colors duration-300
+                        ${errors.email
+                        ? 'border-red-500'
+                        : 'border-lightBackground focus-within:border-accent'
+                        }
+                    `}>
+                        <FontAwesomeIcon
+                            icon={faEnvelope}
+                            className="text-lightBackground group-focus-within:text-accent transition-colors duration-300"
+                        />
+                        <input
+                            type="email"
+                            placeholder=" "
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                if (errors.email) setErrors({ ...errors, email: '' })
+                                if (apiError)     setApiError('')
+                            }}
+                            className="peer bg-transparent focus:outline-none w-full text-lightBackground placeholder-transparent"
+                        />
+                        <label className="
+                                absolute left-8 top-2
+                                text-lightBackground text-base
+                                transition-all duration-300 pointer-events-none
+                                peer-placeholder-shown:top-2
+                                peer-placeholder-shown:text-base
+                                peer-focus:-top-4
+                                peer-focus:text-xs
+                                peer-focus:text-accent
+                                peer-[:not(:placeholder-shown)]:-top-4
+                                peer-[:not(:placeholder-shown)]:text-xs">
+                            Email Address
+                        </label>
+                    </div>
+                    {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                    )}
                 </div>
 
                 {/* Password */}
                 <div className="flex flex-col gap-1">
-                <div className={`
-                    relative flex items-center gap-3 py-2
-                    border-b transition-colors duration-300
-                    ${errors.password
-                    ? 'border-red-500'
-                    : 'border-lightBackground focus-within:border-accent'
-                    }
-                `}>
-                    <FontAwesomeIcon icon={faLock} className="text-lightBackground" />
-                    <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder=" "
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value)
-                        if (errors.password) setErrors({ ...errors, password: '' })
-                    }}
-                    className="peer bg-transparent focus:outline-none w-full text-white placeholder-transparent tracking-widest"
-                    />
-                    <label className="
-                    absolute left-8 top-2
-                    text-lightBackground text-base tracking-normal
-                    transition-all duration-300 pointer-events-none
-                    peer-placeholder-shown:top-2
-                    peer-placeholder-shown:text-base
-                    peer-focus:-top-4
-                    peer-focus:text-xs
-                    peer-focus:text-accent
-                    peer-[:not(:placeholder-shown)]:-top-4
-                    peer-[:not(:placeholder-shown)]:text-xs
-                    ">
-                    Password
-                    </label>
-                    <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-lightBackground hover:text-accent transition-colors"
-                    >
-                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                    </button>
-                </div>
-                {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-                )}
-                </div>
-
-                {/* Confirm Password */}
-                <div className="flex flex-col gap-1">
-                <div className={`
-                    relative flex items-center gap-3 py-2
-                    border-b transition-colors duration-300
-                    ${errors.confirmPassword
-                    ? 'border-red-500'
-                    : 'border-lightBackground focus-within:border-accent'
-                    }
-                `}>
-                    <FontAwesomeIcon icon={faLock} className="text-lightBackground" />
-                    <input
-                    type={showConfirm ? 'text' : 'password'}
-                    placeholder=" "
-                    value={confirmPassword}
-                    onChange={(e) => {
-                        setConfirmPassword(e.target.value)
-                        if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: '' })
-                    }}
-                    className="peer bg-transparent focus:outline-none w-full text-white placeholder-transparent tracking-widest"
-                    />
-                    <label className="
-                    absolute left-8 top-2
-                    text-lightBackground text-base tracking-normal
-                    transition-all duration-300 pointer-events-none
-                    peer-placeholder-shown:top-2
-                    peer-placeholder-shown:text-base
-                    peer-focus:-top-4
-                    peer-focus:text-xs
-                    peer-focus:text-accent
-                    peer-[:not(:placeholder-shown)]:-top-4
-                    peer-[:not(:placeholder-shown)]:text-xs
-                    ">
-                    Confirm Password
-                    </label>
-                    <button
-                    type="button"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                    className="text-lightBackground hover:text-accent transition-colors"
-                    >
-                    <FontAwesomeIcon icon={showConfirm ? faEyeSlash : faEye} />
-                    </button>
-                </div>
-                {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
-                )}
+                    <div className={`
+                        group relative flex items-center gap-3 py-2
+                        border-b transition-colors duration-300
+                        ${errors.password
+                        ? 'border-red-500'
+                        : 'border-lightBackground focus-within:border-accent'
+                        }
+                    `}>
+                        <FontAwesomeIcon
+                            icon={faLock}
+                            className="text-lightBackground group-focus-within:text-accent transition-colors duration-300"
+                        />
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder=" "
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value)
+                                if (errors.password) setErrors({ ...errors, password: '' })
+                                if (apiError)        setApiError('')
+                            }}
+                            className="peer bg-transparent focus:outline-none w-full text-lightBackground placeholder-transparent tracking-widest"
+                        />
+                        <label className="absolute left-8 top-2
+                                text-lightBackground text-base tracking-normal
+                                transition-all duration-300 pointer-events-none
+                                peer-placeholder-shown:top-2
+                                peer-placeholder-shown:text-base
+                                peer-focus:-top-4
+                                peer-focus:text-xs
+                                peer-focus:text-accent
+                                peer-[:not(:placeholder-shown)]:-top-4
+                                peer-[:not(:placeholder-shown)]:text-xs">
+                            Password
+                        </label>
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="text-lightBackground hover:text-accent transition-colors"
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        </button>
+                    </div>
+                    {errors.password && (
+                        <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                    )}
                 </div>
 
                 {/* Submit Button */}
                 <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full py-4 rounded-xl border border-accent text-white font-medium text-lg hover:bg-accent transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="w-full py-4 rounded-xl border border-accent text-lightBackground font-medium text-lg hover:bg-accent transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                {loading ? 'Creating account...' : 'Sign Up'}
+                    {loading ? 'Logging in...' : 'Log In'}
                 </button>
-
             </div>
         </div>
     )
