@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-import User from './models/User.js'
+import { signup, login } from './controllers/authController.js'
 
 // Load environment variables
 dotenv.config()
