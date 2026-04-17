@@ -2,7 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-import { signup, login } from './controllers/authController.js'
+import { signup, login, getMe } from './controllers/authController.js'
+import protect from './middleware/authMiddleware.js'
 
 // Load environment variables
 dotenv.config()
@@ -24,6 +25,11 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.json({ message: '🚀 Authify server is running!' })
 })
+
+// Temporary test routes - remove after testing
+app.post('/api/auth/signup', signup)
+app.post('/api/auth/login', login)
+app.get('/api/auth/me', protect, getMe)
 
 // Auth routes - will be added in issue #15
 // app.use('/api/auth', authRoutes)
