@@ -5,6 +5,7 @@ import connectDB from './config/db.js'
 import { signup, login, getMe } from './controllers/authController.js'
 import protect from './middleware/authMiddleware.js'
 import authRoutes from './routes/authRoutes.js'
+import User from './models/User.js'
 
 // Load environment variables
 dotenv.config()

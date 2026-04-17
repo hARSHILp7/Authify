@@ -1,12 +1,13 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+import User from '../models/User.js'
 
 // Generate JWT token
 const generateToken = (id) => {
     return jwt.sign(
         { id },
         process.env.JWT_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: '7d' },
     )
 }
 
@@ -31,8 +32,16 @@ export const signup = async (req, res) => {
             })
         }
 
-        // Create new user
-        const user = await User.create({ name, email, password })
+        // Hash password before saving
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        // Create new user with hashed password
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+        })
 
         //Generate token
         const token = generateToken(user._id)
@@ -76,8 +85,9 @@ export const login = async (req, res) => {
             })
         }
 
-        // Check password - plain text for now (bcrypt in isuue #16)
-        if (password !== user.password) {
+        // Compare entered password with hashed password
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) {
             return res.status(401).json({
                 message: 'Invalid email or password'
             })
@@ -108,7 +118,6 @@ export const login = async (req, res) => {
 // GET /api/auth/me
 export const getMe = async (req, res) => {
     try {
-        // req.user is set by authMiddleware (Issue #14)
         const user = await User.findById(req.user.id).select('-password')
         if (!user) {
             return res.status(404).json({
