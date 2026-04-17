@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import { signup, login, getMe } from './controllers/authController.js'
 import protect from './middleware/authMiddleware.js'
+import authRoutes from './routes/authRoutes.js'
 
 // Load environment variables
 dotenv.config()
@@ -31,8 +32,8 @@ app.post('/api/auth/signup', signup)
 app.post('/api/auth/login', login)
 app.get('/api/auth/me', protect, getMe)
 
-// Auth routes - will be added in issue #15
-// app.use('/api/auth', authRoutes)
+// Auth routes
+app.use('/api/auth', authRoutes)
 
 // Start server
 app.listen(PORT, () => {
