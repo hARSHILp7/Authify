@@ -15,21 +15,22 @@ const generateToken = (id) => {
 // POST /api/auth/signup
 export const signup = async (req, res) => {
     try {
-        const { name, email, password } = req.body
+        const { name, username, email, password } = req.body
 
         // Check if all fields are provided
-        if (!name || !email || !password) {
+        if (!name || !username || !email || !password) {
             return res.status(400).json({
                 message: 'All fields are required'
             })
         }
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email })
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] })
         if (existingUser) {
-            return res.status(400).json({
-                message: 'User already exists with this email'
-            })
+            if (existingUser.email === email) {
+                return res.status(400).json({ message: 'User already exists with this email' })
+            }
+            return res.status(400).json({ message: 'Username is already taken' })
         }
 
         // Hash password before saving
@@ -39,6 +40,7 @@ export const signup = async (req, res) => {
         // Create new user with hashed password
         const user = await User.create({
             name,
+            username,
             email,
             password: hashedPassword,
         })
@@ -53,6 +55,7 @@ export const signup = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
+                username: user.username,
                 email: user.email,
             },
         })
@@ -68,20 +71,20 @@ export const signup = async (req, res) => {
 // POST /api/auth/login
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { username, email, password } = req.body
 
         // Check if all fields are provided
-        if (!email || !password) {
+        if ((!username && !email) || !password) {
             return res.status(400).json({
-                message: 'Email and password are required'
+                message: 'Username or email and password are required'
             })
         }
 
-        // Find user by email
-        const user = await User.findOne({ email })
+        // Find user by username or email
+        const user = await User.findOne(username ? { username } : { email })
         if (!user) {
             return res.status(401).json({
-                message: 'Invalid email or password'
+                message: 'Invalid credentials'
             })
         }
 
@@ -89,7 +92,7 @@ export const login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
             return res.status(401).json({
-                message: 'Invalid email or password'
+                message: 'Invalid credentials'
             })
         }
 

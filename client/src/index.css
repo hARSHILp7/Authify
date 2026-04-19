@@ -6,9 +6,11 @@
 
 @layer base {
     :root {
-        --color-darkBackground: #14140F;    /* Black */
-        --color-lightBackground: #FFFFFF;   /* White */
-        --color-accent: #F26800;            /* Orange */
+        --color-paper: #F6F4F1;
+        --color-stone: #E4DED2;
+        --color-coral: #F95C4B;
+        --color-black: #000000;
+        --color-red: #FF3131;
     }
 
     body {
@@ -25,21 +27,40 @@
     }
 }
 
+@keyframes slideInFromLeft {
+    from { opacity: 0; transform: translateX(-60px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOutToRight {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(60px); }
+}
+
+.page-enter {
+    animation: slideInFromLeft 0.3s ease forwards;
+}
+
+.page-exit {
+    animation: slideOutToRight 0.3s ease forwards;
+    pointer-events: none;
+}
+
 .input-box {
-    @apply w-full bg-transparent border-[1px] border-accent rounded-md focus:border-b-[1px] focus:outline-none
-    px-2 py-3 text-lightBackground transition-colors duration-500;
+    @apply w-full bg-transparent border-[1px] border-coral rounded-md focus:border-b-[1px] focus:outline-none
+    px-2 py-3 text-paper transition-colors duration-500;
 }
 
 .input-label {
-    @apply text-lightBackground font-extralight text-sm transition-all duration-500 pointer-events-none;
+    @apply text-paper font-extralight text-sm transition-all duration-500 pointer-events-none;
 }
 
 .signup-button, .login-button {
-    @apply w-3/4 py-3 mt-10 text-xl font-normal text-accent border-accent border-[1px] rounded-md
-    transition duration-500 hover:bg-accent hover:text-darkBackground;
+    @apply w-3/4 py-3 mt-10 text-xl font-normal text-coral border-coral border-[1px] rounded-md
+    transition duration-500 hover:bg-coral hover:text-black;
 }
 
 .back-button {
-    @apply w-1/4 py-3 mt-10 text-xl font-normal text-lightBackground rounded-md transition duration-500
-    hover:bg-lightBackground hover:text-darkBackground;
+    @apply w-1/4 py-3 mt-10 text-xl font-normal text-paper rounded-md transition duration-500
+    hover:bg-paper hover:text-black;
 }
