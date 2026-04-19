@@ -106,6 +106,7 @@ export const login = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
+                username: user.username,
                 email: user.email,
             },
         })
@@ -114,6 +115,17 @@ export const login = async (req, res) => {
             message: 'Server error',
             error: error.message,
         })
+    }
+}
+
+// Delete account
+// DELETE /api/auth/me
+export const deleteMe = async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.user.id)
+        res.status(200).json({ message: 'Account deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message })
     }
 }
 

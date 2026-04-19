@@ -38,5 +38,6 @@ API.interceptors.response.use(
 export const signupUser = (data) => API.post('/api/auth/signup', data)
 export const loginUser = (data) => API.post('/api/auth/login', data)
 export const getMe = () => API.get('/api/auth/me')
+export const deleteAccount = () => API.delete('/api/auth/me')
 
 export default API

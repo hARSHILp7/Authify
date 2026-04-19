@@ -27,14 +27,14 @@ function WelcomeMessage({ isNewUser }) {
                 transition-all duration-500
                 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}
               `}>
-            <div className="bg-darkBackground border border-accent rounded-2xl p-8 text-center flex flex-col gap-3">
+            <div className="bg-black border border-coral rounded-2xl p-8 text-center flex flex-col gap-3">
                 {/* Icon */}
                 <div className="text-5xl">
                     {isNewUser ? '🎉' : '👋'}
                 </div>
 
                 {/* Message */}
-                <h1 className="text-lightBackground text-3xl font-bold">
+                <h1 className="text-paper text-3xl font-bold">
                     {isNewUser
                         ? `Welcome to Authify, ${user?.name}!`
                         : `Welcome back, ${user?.name}!`
@@ -42,7 +42,7 @@ function WelcomeMessage({ isNewUser }) {
                 </h1>
 
                 {/* Sub message */}
-                <p className="text-darkBackground text-ms">
+                <p className="text-black text-ms">
                     {isNewUser
                         ? `Your account has been created successfully.`
                         : `Great to see you again.`
@@ -55,7 +55,7 @@ function WelcomeMessage({ isNewUser }) {
                         setVisible(false)
                         setTimeout(() => setShow(false), 500)
                     }}
-                    className="mt-2 text-darkbackground hover:text-accent text-sm transition-colors duration-300">
+                    className="mt-2 text-paper hover:text-coral text-sm transition-colors duration-300">
                     Dismiss →
                 </button>
             </div>

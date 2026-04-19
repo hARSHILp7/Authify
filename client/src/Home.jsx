@@ -1,6 +1,9 @@
+import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate } from 'react-router-dom'
+import { faLock, faCircleUser, faShuffle } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import WelcomeMessage from './components/WelcomeMessage'
 
 function Home() {
     const messages = [
@@ -12,27 +15,75 @@ function Home() {
             "Do it with passion", "Be bold, stay humble", "Trust the long journey",
         ]
 
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+    const [randomMessage, setRandomMessage] = useState(messages[Math.floor(Math.random() * messages.length)])
 
-    const navigate = useNavigate();
+    const shuffleMessage = () => {
+        setRandomMessage(messages[Math.floor(Math.random() * messages.length)])
+    }
+    const [exiting, setExiting] = useState(false)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const { user } = useAuth()
+
+    const isNewUser = location.state?.isNewUser
+    const showWelcome = isNewUser !== undefined
+
+    useEffect(() => {
+        if (showWelcome) {
+            window.history.replaceState({}, '')
+        }
+    }, [])
+
+    const handleNavigate = (path) => {
+        setExiting(true)
+        setTimeout(() => navigate(path), 300)
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-10 h-screen bg-black font-extralight">
-            <div className="relative w-fit">
-                <p className="text-paper text-[56px] blur-[22px] select-none">
-                {randomMessage}
-                </p>
-                <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-3xl">
-                    <FontAwesomeIcon icon={faLock} className="text-coral" />
-                </span>
+        <div className="flex flex-col items-center justify-center gap-10 h-screen bg-black font-extralight overflow-hidden">
+            {showWelcome && <WelcomeMessage isNewUser={isNewUser} />}
+            {user && (
+                <button
+                    onClick={() => handleNavigate('/dashboard')}
+                    className="fixed top-6 right-8 text-paper hover:text-coral transition-colors duration-300"
+                >
+                    <FontAwesomeIcon icon={faCircleUser} className="text-4xl" />
+                </button>
+            )}
+            <div className={`flex flex-col items-center gap-10 ${exiting ? 'page-exit' : 'page-enter'}`}>
+                <div className="relative w-fit">
+                    <p className={`text-paper text-[56px] select-none transition-all duration-700 ${user ? '' : 'blur-[22px]'}`}>
+                        {randomMessage}
+                    </p>
+                    {!user && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-3xl">
+                                <FontAwesomeIcon icon={faLock} className="text-coral" />
+                            </span>
+                        </div>
+                    )}
                 </div>
+                {user ? (
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={shuffleMessage}
+                            className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
+                            <FontAwesomeIcon icon={faShuffle} />
+                        </button>
+                        <button
+                            onClick={() => handleNavigate('/dashboard')}
+                            className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
+                            Profile
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        onClick={() => handleNavigate('/login')}
+                        className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
+                        Unlock
+                    </button>
+                )}
             </div>
-            <button
-                onClick={() => navigate('/login')}
-                className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
-                Unlock
-            </button>
         </div>
     )
 }

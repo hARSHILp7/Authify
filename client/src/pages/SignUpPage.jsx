@@ -90,7 +90,7 @@ function SignUpPage() {
             // Save user and token to AuthContext and localStorage
             login(response.data.user, response.data.token)
             //Redirect to dashboard as new user
-            navigate('/dashboard', { state: { isNewUser: true } })
+            navigate('/', { state: { isNewUser: true } })
         } catch (error) {
             setApiError(
                 error.response?.data?.message || 'Sign up failed. Please try again.'
@@ -105,14 +105,23 @@ function SignUpPage() {
             <div className={`border border-coral rounded-2xl p-10 w-full max-w-lg flex flex-col gap-8 ${exiting ? 'page-exit' : 'page-enter'}`}>
 
                 {/* Heading */}
-                <div>
-                    <h1 className="text-paper text-4xl font-light">Sign Up</h1>
-                    <p className="text-paper mt-1">
-                        Already a member?{" "}
-                        <button type="button" onClick={() => handleNavigate('/login')} className="text-coral">
-                            Log in
-                        </button>
-                    </p>
+                <div className="flex items-start justify-between">
+                    <div>
+                        <h1 className="text-paper text-4xl font-light">Sign Up</h1>
+                        <p className="text-paper mt-1">
+                            Already a member?{" "}
+                            <button type="button" onClick={() => handleNavigate('/login')} className="text-coral">
+                                Log in
+                            </button>
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => handleNavigate('/')}
+                        className="text-stone font-medium mt-1 hover:text-coral transition-colors duration-300"
+                    >
+                        Back
+                    </button>
                 </div>
 
                 {/* API Error */}
@@ -363,7 +372,7 @@ function SignUpPage() {
                 <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="w-full py-4 mt-6 rounded-xl border border-coral text-coral font-medium text-lg hover:bg-coral hover:text-black transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="w-full py-4 rounded-xl border border-coral text-coral font-medium text-lg hover:bg-coral hover:text-black transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                     {loading ? 'Signing up...' : 'Sign Up'}
                 </button>

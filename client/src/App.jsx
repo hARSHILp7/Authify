@@ -19,7 +19,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute redirectTo="/">
                 <DashboardPage />
               </ProtectedRoute>
           } />
