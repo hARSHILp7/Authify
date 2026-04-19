@@ -5,9 +5,9 @@ import User from '../models/User.js'
 // Generate JWT token
 const generateToken = (id) => {
     return jwt.sign(
-        { id },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' },
+        { id },                     // payload
+        process.env.JWT_SECRET,     // secret key
+        { expiresIn: '7d' },        // expiry
     )
 }
 
