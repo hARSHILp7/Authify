@@ -15,10 +15,14 @@ function Home() {
             "Do it with passion", "Be bold, stay humble", "Trust the long journey",
         ]
 
-    const [randomMessage, setRandomMessage] = useState(messages[Math.floor(Math.random() * messages.length)])
+    const [randomMessage, setRandomMessage] = useState(
+        () => localStorage.getItem('authify_message') || messages[0]
+    )
 
     const shuffleMessage = () => {
-        setRandomMessage(messages[Math.floor(Math.random() * messages.length)])
+        const next = messages[Math.floor(Math.random() * messages.length)]
+        setRandomMessage(next)
+        localStorage.setItem('authify_message', next)
     }
     const [exiting, setExiting] = useState(false)
     const navigate = useNavigate()
@@ -69,11 +73,6 @@ function Home() {
                             onClick={shuffleMessage}
                             className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
                             <FontAwesomeIcon icon={faShuffle} />
-                        </button>
-                        <button
-                            onClick={() => handleNavigate('/dashboard')}
-                            className="border-coral border-[1px] text-[28px] text-coral font-normal px-4 py-2 rounded-lg transition duration-500 hover:bg-coral hover:text-black">
-                            Profile
                         </button>
                     </div>
                 ) : (
